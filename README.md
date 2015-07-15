@@ -1,0 +1,2 @@
+# Titanic
+Open Kaggle competition
