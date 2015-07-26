@@ -1,5 +1,5 @@
+source("preprocessing.R")
 ##install.packages("rpart")
-
 #load the decision tree package
 library("rpart")
 
@@ -14,6 +14,12 @@ my_tree_two <- rpart(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare + Emba
 plot(my_tree_two)
 text(my_tree_two)
 
+# save to png
+png(file = "decisionTreeBasic.png",width = 480, height = 480)
+  plot(my_tree_two)
+  text(my_tree_two)
+dev.off()
+
 # Load in the packages to create a fancified version of your tree
 #install.packages("rattle")
 #install.packages("rpart.plot")
@@ -25,6 +31,10 @@ library(RColorBrewer)
 
 # Time to plot your fancified tree
 fancyRpartPlot(my_tree_two, main ="Titanic Survival Decision Tree")
+# save to png
+png(file = "decisionTreeFancy.png",width = 480, height = 480)
+  fancyRpartPlot(my_tree_two, main ="Titanic Survival Decision Tree")
+dev.off()
 
 # Make your prediction using the test set
 my_prediction <- predict(object = my_tree_two, newdata = test, type = "class")

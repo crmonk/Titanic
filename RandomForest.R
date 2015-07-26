@@ -1,5 +1,5 @@
+source("preprocessing.R")
 #RandomForest Data Cleaning
-
 
 #create all_data
 survTest <- data.frame(matrix(data = NA, nrow = 418, ncol = 1, dimnames = list(NULL,c("Survived"))))
@@ -60,7 +60,7 @@ all_data$Surname <- sapply(all_data$Name, FUN=function(x) {strsplit(x, split='[,
 all_data$FamilyID <- sapply(all_data$Name, FUN=function(x) {strsplit(x, split='[,.]')[[1]][1]})
 
 
-combi$FamilySize <- combi$SibSp + combi$Parch + 1
+#combi$FamilySize <- combi$SibSp + combi$Parch + 1
 
 # How to fill in missing Age values?
 # We make a prediction of a passengers Age using the other variables and a decision tree model. 
@@ -86,7 +86,20 @@ library(randomForest)
 set.seed(111)
 
 # Apply the Random Forest Algorithm 
-my_forest <- randomForest(formula = as.factor(Survived) ~ Pclass + Sex + Age + SibSp + Parch + Fare + Embarked + Title, data = train, type = classification, importance = TRUE)
+my_forest <- randomForest(formula = as.factor(Survived) ~ Pclass + Sex + Age + SibSp + Parch + Fare + Embarked + Title, data = train, type = classification, importance = TRUE, proximity = TRUE)
+
+# save to png
+png(file = "randomForestPlot.png",width = 480, height = 480)
+  plot(my_forest, log = "y")
+dev.off()
+
+png(file = "randomForest_Proximity_MDS.png",width = 480, height = 480)
+  MDSplot(my_forest, train$Title)
+dev.off()
+
+png(file = "randomForest_varImpPlot.png",width = 480, height = 480)
+  varImpPlot(my_forest)
+dev.off()
 
 # Make your prediction using the test set
 my_prediction <- predict(my_forest, test)
